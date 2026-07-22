@@ -1,0 +1,9 @@
+[
+  { "id": "todos", "name": "Todos" },
+  { "id": "hombre", "name": "Hombre" },
+  { "id": "mujer", "name": "Mujer" },
+  { "id": "unisex", "name": "Unisex" },
+  { "id": "trekking", "name": "Trekking & Outdoor" },
+  { "id": "fiestas-patrias", "name": "Fiestas Patrias" },
+  { "id": "ofertas", "name": "Ofertas S/ 99" }
+]

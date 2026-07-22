@@ -1,0 +1,98 @@
+[
+  {
+    "id": "nike",
+    "name": "Nike",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg",
+    "description": "Just Do It. Innovación deportiva mundial."
+  },
+  {
+    "id": "adidas",
+    "name": "Adidas",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/2/20/Adidas_Logo.svg",
+    "description": "Impossible Is Nothing. Estilo urbano y deportivo."
+  },
+  {
+    "id": "new-balance",
+    "name": "New Balance",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ea/New_Balance_logo.svg",
+    "description": "Fearlessly Independent. Confort y amortiguación."
+  },
+  {
+    "id": "reebok",
+    "name": "Reebok",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/5/53/Reebok_2019_logo.svg",
+    "description": "Life is Not a Spectator Sport. Diseño clásico y moderno."
+  },
+  {
+    "id": "puma",
+    "name": "Puma",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/8/88/Puma_complete_logo.svg",
+    "description": "Forever Faster. Velocidad y actitud."
+  },
+  {
+    "id": "asics",
+    "name": "Asics",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/b/b1/Asics_Logo.svg",
+    "description": "Sound Mind, Sound Body. Running técnico y estabilidad."
+  },
+  {
+    "id": "cat",
+    "name": "CAT",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/1/1a/Caterpillar_logo.svg",
+    "description": "Earthmovers & Trailblazers. Durabilidad y resistencia industrial."
+  },
+  {
+    "id": "merrell",
+    "name": "Merrell",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/8/82/Merrell_logo.svg",
+    "description": "Get Out There. Líder mundial en calzado de montaña y outdoor."
+  },
+  {
+    "id": "hi-tec",
+    "name": "Hi-Tec",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/e/e0/Hi-Tec_logo.svg",
+    "description": "Inspired by Life. Calzado outdoor y trekking de alto rendimiento."
+  },
+  {
+    "id": "saucony",
+    "name": "Saucony",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/c/c5/Saucony_logo.svg",
+    "description": "Run for Good. Rendimiento profesional en atletismo."
+  },
+  {
+    "id": "mizuno",
+    "name": "Mizuno",
+    "logo": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=200",
+    "description": "Reach Beyond. Amortiguación Wave japonesa."
+  },
+  {
+    "id": "brooks",
+    "name": "Brooks",
+    "logo": "https://images.unsplash.com/photo-1551107696-a4b0c5a0d9a2?auto=format&fit=crop&q=80&w=200",
+    "description": "Run Happy. Máximo soporte biomecánico."
+  },
+  {
+    "id": "salomon",
+    "name": "Salomon",
+    "logo": "https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&q=80&w=200",
+    "description": "Time to Play. Especialistas en trail running."
+  },
+  {
+    "id": "mossimo",
+    "name": "Mossimo",
+    "logo": "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?auto=format&fit=crop&q=80&w=200",
+    "description": "Casual Fashion & Comfort."
+  },
+  {
+    "id": "rs21",
+    "name": "RS21",
+    "logo": "https://images.unsplash.com/photo-1605348532760-6753d2c43329?auto=format&fit=crop&q=80&w=200",
+    "description": "Urban & Active Sports."
+  },
+  {
+    "id": "terrarush",
+    "name": "Terrarush",
+    "logo": "https://images.unsplash.com/photo-1539185441755-769473a23570?auto=format&fit=crop&q=80&w=200",
+    "description": "Outdoor & Mountain Adventure."
+  }
+]

@@ -1,0 +1,8 @@
+{
+  "name": "AUKI SPORT v.1",
+  "description": "Premium footwear catalog offering an immersive shopping experience with direct WhatsApp integration.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
