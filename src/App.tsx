@@ -9,11 +9,39 @@ import { CartDrawer } from './components/CartDrawer';
 import { CheckoutModal } from './components/CheckoutModal';
 import { Footer } from './components/Footer';
 
+import { AdminLayout } from './components/admin/AdminLayout';
+import { AdminLogin } from './components/admin/AdminLogin';
+import { productsService, authService } from './services/api';
+
 import { products as initialProducts } from './data/products';
-import { Product, CartItem } from './types';
-import { MessageCircle, Phone, ArrowUp } from 'lucide-react';
+import { Product, CartItem, AdminUser } from './types';
+import { MessageCircle, ArrowUp } from 'lucide-react';
 
 export default function App() {
+  // Navigation / Route state
+  const [isAdminRoute, setIsAdminRoute] = useState<boolean>(() => {
+    return window.location.pathname.startsWith('/admin');
+  });
+
+  const [adminUser, setAdminUser] = useState<AdminUser | null>(() => {
+    return authService.getCurrentUser();
+  });
+
+  // Listen to browser path changes / pushState
+  useEffect(() => {
+    const handleLocationChange = () => {
+      setIsAdminRoute(window.location.pathname.startsWith('/admin'));
+    };
+
+    window.addEventListener('popstate', handleLocationChange);
+    return () => window.removeEventListener('popstate', handleLocationChange);
+  }, []);
+
+  const navigateTo = (path: string) => {
+    window.history.pushState({}, '', path);
+    setIsAdminRoute(path.startsWith('/admin'));
+  };
+
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const [selectedCategory, setSelectedCategory] = useState<string>('Todos');
   const [selectedBrand, setSelectedBrand] = useState<string>('Todas');
@@ -44,21 +72,21 @@ export default function App() {
     }
   }, [cartItems]);
 
-  // Try fetching external productos.json dynamically if available
+  // Load products dynamically from REST API Service
+  const loadProducts = async () => {
+    try {
+      const liveProducts = await productsService.getAll();
+      if (liveProducts && liveProducts.length > 0) {
+        setProducts(liveProducts);
+      }
+    } catch (err) {
+      console.error('Error fetching live products', err);
+    }
+  };
+
   useEffect(() => {
-    fetch('/data/productos.json')
-      ? fetch('/data/productos.json')
-          .then(res => res.json())
-          .then(data => {
-            if (Array.isArray(data) && data.length > 0) {
-              setProducts(data);
-            }
-          })
-          .catch(() => {
-            // Fallback to imported products array
-          })
-      : null;
-  }, []);
+    loadProducts();
+  }, [isAdminRoute]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -68,6 +96,33 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // ADMIN ROUTE RENDERING
+  if (isAdminRoute) {
+    if (!adminUser) {
+      return (
+        <AdminLogin
+          onSuccess={(user) => {
+            setAdminUser(user);
+          }}
+        />
+      );
+    }
+
+    return (
+      <AdminLayout
+        user={adminUser}
+        onLogout={async () => {
+          await authService.logout();
+          setAdminUser(null);
+        }}
+        onGoToPublicStore={() => {
+          navigateTo('/');
+        }}
+      />
+    );
+  }
+
+  // PUBLIC STORE ROUTE RENDERING
   // Cart operations
   const handleAddToCart = (item: CartItem) => {
     setCartItems(prev => {
@@ -167,7 +222,7 @@ export default function App() {
           onSelectBrand={setSelectedBrand}
         />
 
-        {/* Promotions & Mother's Day Banner */}
+        {/* Promotions Banner */}
         <PromosSection
           onSelectCategory={(cat) => {
             setSelectedCategory(cat);
@@ -251,3 +306,4 @@ export default function App() {
     </div>
   );
 }
+
