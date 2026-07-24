@@ -111,7 +111,17 @@ export const Footer: React.FC = () => {
             <span>•</span>
             <span>Garantía de Tienda</span>
             <span>•</span>
-            <span>Pago Seguro</span>
+            <a 
+              href="/admin" 
+              onClick={(e) => {
+                e.preventDefault();
+                window.history.pushState({}, '', '/admin');
+                window.dispatchEvent(new PopStateEvent('popstate'));
+              }}
+              className="text-white/30 hover:text-red-400 transition-colors cursor-pointer underline"
+            >
+              Panel Admin
+            </a>
           </div>
         </div>
 
