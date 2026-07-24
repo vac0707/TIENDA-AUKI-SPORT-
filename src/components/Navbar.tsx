@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ShoppingBag, Search, Menu, X, Phone, Heart, Sparkles } from 'lucide-react';
+import { ShoppingBag, Search, Menu, X, Phone, Sparkles } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { Category, SiteConfig, PromotionsConfig } from '../types';
 
 interface NavbarProps {
   onOpenCart: () => void;
@@ -10,6 +11,9 @@ interface NavbarProps {
   activeCategory: string;
   onSelectCategory: (cat: string) => void;
   searchQuery: string;
+  categories?: Category[];
+  siteConfig?: SiteConfig | null;
+  promotionsConfig?: PromotionsConfig | null;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ 
@@ -18,7 +22,10 @@ export const Navbar: React.FC<NavbarProps> = ({
   onSearch, 
   activeCategory, 
   onSelectCategory,
-  searchQuery
+  searchQuery,
+  categories = [],
+  siteConfig,
+  promotionsConfig
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -39,28 +46,37 @@ export const Navbar: React.FC<NavbarProps> = ({
     if (catalogEl) catalogEl.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const navCategories = [
-    { id: 'Todos', label: 'Inicio' },
-    { id: 'Hombre', label: 'Hombre' },
-    { id: 'Mujer', label: 'Mujer' },
-    { id: 'Trekking', label: 'Trekking' },
-    { id: 'Fiestas Patrias', label: 'Fiestas Patrias 🇵🇪', highlight: true },
-    { id: 'Ofertas', label: 'Ofertas S/ 99', badge: 'HOT' },
+  // Build dynamic navigation items from active Categories
+  const activeCats = categories.filter(c => c.active !== false);
+  const navItems = [
+    { id: 'Todos', label: 'Inicio', highlight: false },
+    ...activeCats.map(c => ({
+      id: c.name,
+      label: c.name,
+      highlight: c.name.toLowerCase().includes('patria') || c.name.toLowerCase().includes('oferta')
+    }))
   ];
+
+  const topAnnouncement = promotionsConfig?.headline
+    ? `${promotionsConfig.headline} - ${promotionsConfig.subheadline || 'AUKI SPORT'}`
+    : "PROMO FIESTAS PATRIAS 🇵🇪: ¡HASTA 50% DE DESCUENTO EN MODELOS SELECCIONADOS!";
+
+  const phoneDisplay = siteConfig?.contactPhone || "931 741 682";
+  const whatsappNum = siteConfig?.whatsappPhone || "51931741682";
 
   return (
     <>
       {/* Top Banner Announcement */}
       <div className="bg-gradient-to-r from-red-600 via-red-500 to-black text-white text-[11px] font-bold py-2 px-4 text-center flex items-center justify-center gap-3 tracking-wider uppercase z-50 relative">
         <Sparkles size={14} className="text-yellow-300 animate-pulse" />
-        <span>PROMO FIESTAS PATRIAS 🇵🇪: ¡HASTA 50% DE DESCUENTO EN MODELOS SELECCIONADOS!</span>
+        <span className="truncate max-w-2xl">{topAnnouncement}</span>
         <a 
-          href="https://wa.me/51931741682" 
+          href={`https://wa.me/${whatsappNum}`} 
           target="_blank" 
           rel="noreferrer" 
-          className="hidden md:inline-flex items-center gap-1 bg-white/20 hover:bg-white/30 px-2 py-0.5 rounded text-[10px] transition-colors"
+          className="hidden md:inline-flex items-center gap-1 bg-white/20 hover:bg-white/30 px-2 py-0.5 rounded text-[10px] transition-colors shrink-0"
         >
-          <Phone size={12} /> Pedidos: 931 741 682
+          <Phone size={12} /> Pedidos: {phoneDisplay}
         </a>
       </div>
 
@@ -72,9 +88,20 @@ export const Navbar: React.FC<NavbarProps> = ({
           
           {/* Logo AUKI SPORT */}
           <a href="#" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center font-black text-xl italic text-white shadow-lg shadow-red-600/30 group-hover:scale-105 transition-transform">
-              A
-            </div>
+            {siteConfig?.logoUrl ? (
+              <img 
+                src={siteConfig.logoUrl} 
+                alt="AUKI SPORT" 
+                className="h-10 w-auto object-contain rounded-lg"
+                onError={(e) => {
+                  (e.target as HTMLElement).style.display = 'none';
+                }}
+              />
+            ) : (
+              <div className="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center font-black text-xl italic text-white shadow-lg shadow-red-600/30 group-hover:scale-105 transition-transform">
+                A
+              </div>
+            )}
             <div className="flex flex-col">
               <span className="text-2xl font-black tracking-tighter uppercase leading-none italic">
                 AUKI <span className="text-red-500">SPORT</span>
@@ -87,7 +114,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           
           {/* Desktop Categories */}
           <div className="hidden lg:flex items-center gap-6 text-xs uppercase tracking-[0.15em] font-bold">
-            {navCategories.map(cat => (
+            {navItems.map(cat => (
               <button
                 key={cat.id}
                 onClick={() => {
@@ -98,15 +125,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                 className={cn(
                   "relative py-2 transition-all flex items-center gap-1.5 hover:text-white",
                   activeCategory === cat.id ? "text-white font-extrabold" : "text-white/60",
-                  cat.highlight && "text-red-400 font-extrabold animate-pulse"
+                  cat.highlight && "text-red-400 font-extrabold"
                 )}
               >
                 {cat.label}
-                {cat.badge && (
-                  <span className="bg-red-600 text-white text-[9px] px-1.5 py-0.2 rounded font-black tracking-normal">
-                    {cat.badge}
-                  </span>
-                )}
                 {activeCategory === cat.id && (
                   <motion.div 
                     layoutId="activeNav" 
@@ -152,13 +174,13 @@ export const Navbar: React.FC<NavbarProps> = ({
             
             {/* WhatsApp Contact Fast Link */}
             <a 
-              href="https://wa.me/51931741682?text=Hola%20AUKI%20SPORT,%20deseo%20informaci%C3%B3n" 
+              href={`https://wa.me/${whatsappNum}?text=Hola%20AUKI%20SPORT,%20deseo%20informaci%C3%B3n`} 
               target="_blank" 
               rel="noreferrer"
               className="hidden sm:flex items-center gap-2 border border-red-500/40 bg-red-500/10 hover:bg-red-500 text-white px-3 py-1.5 rounded-full text-xs font-bold transition-all"
             >
               <Phone size={14} className="text-red-400 group-hover:text-white" />
-              <span>931 741 682</span>
+              <span>{phoneDisplay}</span>
             </a>
 
             {/* Shopping Cart Button */}
@@ -196,7 +218,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="lg:hidden absolute top-full left-0 right-0 bg-black/95 border-b border-white/10 overflow-hidden shadow-2xl"
             >
               <div className="flex flex-col p-6 gap-4 text-base font-black uppercase">
-                {navCategories.map(cat => (
+                {navItems.map(cat => (
                   <button
                     key={cat.id}
                     onClick={() => {
@@ -211,30 +233,17 @@ export const Navbar: React.FC<NavbarProps> = ({
                     )}
                   >
                     <span>{cat.label}</span>
-                    {cat.badge && (
-                      <span className="bg-red-600 text-white text-[10px] px-2 py-0.5 rounded font-black">
-                        {cat.badge}
-                      </span>
-                    )}
                   </button>
                 ))}
                 <div className="pt-4 flex flex-col gap-2">
                   <span className="text-[10px] text-white/40 uppercase tracking-widest font-bold">Atención por WhatsApp:</span>
                   <a 
-                    href="https://wa.me/51931741682" 
+                    href={`https://wa.me/${whatsappNum}`} 
                     target="_blank" 
                     rel="noreferrer" 
                     className="py-3 bg-red-600 text-white text-center rounded font-bold text-sm tracking-wider flex items-center justify-center gap-2"
                   >
-                    <Phone size={16} /> WhatsApp: 931 741 682
-                  </a>
-                  <a 
-                    href="https://wa.me/51914459904" 
-                    target="_blank" 
-                    rel="noreferrer" 
-                    className="py-3 bg-white/10 text-white text-center rounded font-bold text-sm tracking-wider flex items-center justify-center gap-2 border border-white/20"
-                  >
-                    <Phone size={16} /> WhatsApp: 914 459 904
+                    <Phone size={16} /> WhatsApp: {phoneDisplay}
                   </a>
                 </div>
               </div>

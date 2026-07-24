@@ -17,13 +17,22 @@ let dbProducts = [...initialProducts.map(p => ({
 }))];
 
 let dbBrands = [
-  { id: '1', name: 'Adidas', logo: 'https://images.unsplash.com/photo-1518002171953-a080ee817e1f?auto=format&fit=crop&q=80&w=200', description: 'Marca alemana líder en calzado deportivo y urbano.', active: true },
-  { id: '2', name: 'Nike', logo: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=200', description: 'Innovación y rendimiento deportivo global.', active: true },
-  { id: '3', name: 'New Balance', logo: 'https://images.unsplash.com/photo-1539185441755-769473a23570?auto=format&fit=crop&q=80&w=200', description: 'Comodidad superior, diseño retro y urbano.', active: true },
-  { id: '4', name: 'Puma', logo: 'https://images.unsplash.com/photo-1608256246200-53e635b5b65f?auto=format&fit=crop&q=80&w=200', description: 'Estilo audaz y de alto impacto deportivo.', active: true },
-  { id: '5', name: 'Li-Ning', logo: 'https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&q=80&w=200', description: 'Tecnología avanzada para basketball y running.', active: true },
-  { id: '6', name: '361°', logo: 'https://images.unsplash.com/photo-1560769629-975ec94e6a86?auto=format&fit=crop&q=80&w=200', description: 'Amortiguación técnica y rendimiento dinámico.', active: true },
-  { id: '7', name: 'Caterpillar', logo: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&q=80&w=200', description: 'Calzado resistente, durable e industrial.', active: true }
+  { id: 'adidas', name: 'Adidas', logo: 'https://upload.wikimedia.org/wikipedia/commons/2/20/Adidas_Logo.svg', description: 'Marca alemana líder en calzado deportivo y urbano.', active: true },
+  { id: 'nike', name: 'Nike', logo: 'https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg', description: 'Innovación y rendimiento deportivo global.', active: true },
+  { id: 'new-balance', name: 'New Balance', logo: 'https://upload.wikimedia.org/wikipedia/commons/e/ea/New_Balance_logo.svg', description: 'Comodidad superior, diseño retro y urbano.', active: true },
+  { id: 'reebok', name: 'Reebok', logo: 'https://upload.wikimedia.org/wikipedia/commons/5/53/Reebok_2019_logo.svg', description: 'Diseño clásico, deportivo y urbano.', active: true },
+  { id: 'puma', name: 'Puma', logo: 'https://upload.wikimedia.org/wikipedia/commons/8/88/Puma_complete_logo.svg', description: 'Estilo audaz y de alto impacto deportivo.', active: true },
+  { id: 'asics', name: 'Asics', logo: 'https://upload.wikimedia.org/wikipedia/commons/b/b1/Asics_Logo.svg', description: 'Sound Mind, Sound Body. Running técnico.', active: true },
+  { id: 'cat', name: 'CAT', logo: 'https://upload.wikimedia.org/wikipedia/commons/1/1a/Caterpillar_logo.svg', description: 'Calzado resistente, durable e industrial.', active: true },
+  { id: 'merrell', name: 'Merrell', logo: 'https://upload.wikimedia.org/wikipedia/commons/8/82/Merrell_logo.svg', description: 'Calzado de montaña, outdoor y trekking.', active: true },
+  { id: 'hi-tec', name: 'Hi-Tec', logo: 'https://upload.wikimedia.org/wikipedia/commons/e/e0/Hi-Tec_logo.svg', description: 'Senderismo y calzado de aventura.', active: true },
+  { id: 'saucony', name: 'Saucony', logo: 'https://upload.wikimedia.org/wikipedia/commons/c/c5/Saucony_logo.svg', description: 'Rendimiento profesional en atletismo.', active: true },
+  { id: 'mizuno', name: 'Mizuno', logo: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=200', description: 'Amortiguación Wave japonesa.', active: true },
+  { id: 'brooks', name: 'Brooks', logo: 'https://images.unsplash.com/photo-1551107696-a4b0c5a0d9a2?auto=format&fit=crop&q=80&w=200', description: 'Soporte biomecánico para corredores.', active: true },
+  { id: 'salomon', name: 'Salomon', logo: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&q=80&w=200', description: 'Especialistas en trail running.', active: true },
+  { id: 'mossimo', name: 'Mossimo', logo: 'https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?auto=format&fit=crop&q=80&w=200', description: 'Moda urbana casual.', active: true },
+  { id: 'rs21', name: 'RS21', logo: 'https://images.unsplash.com/photo-1605348532760-6753d2c43329?auto=format&fit=crop&q=80&w=200', description: 'Deporte activo y urbano.', active: true },
+  { id: 'terrarush', name: 'Terrarush', logo: 'https://images.unsplash.com/photo-1539185441755-769473a23570?auto=format&fit=crop&q=80&w=200', description: 'Calzado outdoor y trekking.', active: true }
 ];
 
 let dbCategories = [

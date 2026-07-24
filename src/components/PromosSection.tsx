@@ -1,12 +1,25 @@
 import React from 'react';
-import { motion } from 'motion/react';
-import { Heart, Sparkles, Tag, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Sparkles, ArrowRight, ShieldCheck } from 'lucide-react';
+import { PromotionsConfig } from '../types';
 
 interface PromosSectionProps {
   onSelectCategory: (cat: string) => void;
+  promotionsConfig?: PromotionsConfig | null;
 }
 
-export const PromosSection: React.FC<PromosSectionProps> = ({ onSelectCategory }) => {
+export const PromosSection: React.FC<PromosSectionProps> = ({ 
+  onSelectCategory,
+  promotionsConfig
+}) => {
+  const headline = promotionsConfig?.headline || "¡ARRIBA EL PERÚ! DESCUENTOS PATRIOS EN ZAPATILLAS.";
+  const subheadline = promotionsConfig?.subheadline || "Celebra estas Fiestas Patrias renovando tu calzado deportivo y urbano. Modelos seleccionados Adidas, Nike, New Balance, Puma y más con descuentos reales en tienda.";
+  const badgeText = promotionsConfig?.badgeText || "Especial Fiestas Patrias 🇵🇪 - AUKI SPORT";
+  const discounts = promotionsConfig?.discounts && promotionsConfig.discounts.length >= 3 
+    ? promotionsConfig.discounts 
+    : ["20%", "30%", "50%"];
+  const buttonText = promotionsConfig?.buttonText || "Ver Colección Patrias";
+  const activeCategory = promotionsConfig?.activeCategory || "Fiestas Patrias";
+
   return (
     <section className="py-16 bg-gradient-to-b from-neutral-950 via-black to-neutral-950 text-white border-y border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -20,29 +33,28 @@ export const PromosSection: React.FC<PromosSectionProps> = ({ onSelectCategory }
             <div className="lg:col-span-8 space-y-4">
               <div className="inline-flex items-center gap-2 bg-red-600/30 border border-red-400/50 px-3.5 py-1 rounded-full text-red-200 text-xs font-black uppercase tracking-wider">
                 <Sparkles size={14} className="text-yellow-400" />
-                <span>Especial Fiestas Patrias 🇵🇪 - AUKI SPORT</span>
+                <span>{badgeText}</span>
               </div>
 
-              <h2 className="text-3xl sm:text-5xl font-black italic uppercase leading-none tracking-tight">
-                ¡ARRIBA EL PERÚ! <br />
-                <span className="text-red-400">DESCUENTOS PATRIOS EN ZAPATILLAS.</span>
+              <h2 className="text-3xl sm:text-5xl font-black italic uppercase leading-tight tracking-tight text-white">
+                {headline}
               </h2>
 
               <p className="text-xs sm:text-sm text-white/70 max-w-2xl leading-relaxed">
-                Celebra estas Fiestas Patrias renovando tu calzado deportivo y urbano. Modelos seleccionados Adidas, Nike, New Balance, Puma y más con descuentos reales en tienda.
+                {subheadline}
               </p>
 
               <div className="grid grid-cols-3 gap-3 pt-2 max-w-md">
                 <div className="bg-black/60 border border-red-500/30 p-3 rounded-2xl text-center">
-                  <span className="text-2xl sm:text-3xl font-black text-red-400">20%</span>
+                  <span className="text-2xl sm:text-3xl font-black text-red-400">{discounts[0]}</span>
                   <span className="text-[10px] text-white/60 font-bold block uppercase">En Seleccionados</span>
                 </div>
                 <div className="bg-black/60 border border-red-500/30 p-3 rounded-2xl text-center">
-                  <span className="text-2xl sm:text-3xl font-black text-red-400">30%</span>
+                  <span className="text-2xl sm:text-3xl font-black text-red-400">{discounts[1]}</span>
                   <span className="text-[10px] text-white/60 font-bold block uppercase">En Seleccionados</span>
                 </div>
                 <div className="bg-red-600 border border-red-400 p-3 rounded-2xl text-center text-white shadow-lg">
-                  <span className="text-2xl sm:text-3xl font-black">50%</span>
+                  <span className="text-2xl sm:text-3xl font-black">{discounts[2]}</span>
                   <span className="text-[10px] text-white/90 font-bold block uppercase">En Seleccionados</span>
                 </div>
               </div>
@@ -51,13 +63,13 @@ export const PromosSection: React.FC<PromosSectionProps> = ({ onSelectCategory }
             <div className="lg:col-span-4 flex justify-center lg:justify-end">
               <button
                 onClick={() => {
-                  onSelectCategory('Fiestas Patrias');
+                  onSelectCategory(activeCategory);
                   const catalogEl = document.getElementById('catalog');
                   if (catalogEl) catalogEl.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="px-8 py-5 bg-red-600 hover:bg-red-500 text-white font-black text-xs uppercase tracking-widest rounded-2xl transition-all shadow-xl shadow-red-600/40 flex items-center gap-3 hover:scale-105"
+                className="px-8 py-5 bg-red-600 hover:bg-red-500 text-white font-black text-xs uppercase tracking-widest rounded-2xl transition-all shadow-xl shadow-red-600/40 flex items-center gap-3 hover:scale-105 cursor-pointer"
               >
-                <span>Ver Colección Patrias</span>
+                <span>{buttonText}</span>
                 <ArrowRight size={18} />
               </button>
             </div>
@@ -73,7 +85,7 @@ export const PromosSection: React.FC<PromosSectionProps> = ({ onSelectCategory }
                 ¡Oportunidad Única!
               </span>
               <h3 className="text-2xl font-black italic uppercase">
-                OFERTAS S/ 99.00
+                OFERTAS DE LIQUIDACIÓN
               </h3>
               <p className="text-xs text-white/60">
                 Lotes de zapatillas originales de liquidación garantizada. Disponibilidad por tallas limitadas.
@@ -87,9 +99,9 @@ export const PromosSection: React.FC<PromosSectionProps> = ({ onSelectCategory }
                   const catalogEl = document.getElementById('catalog');
                   if (catalogEl) catalogEl.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="px-6 py-3 bg-white text-black hover:bg-red-600 hover:text-white font-black text-xs uppercase tracking-wider rounded-xl transition-all flex items-center gap-2"
+                className="px-6 py-3 bg-white text-black hover:bg-red-600 hover:text-white font-black text-xs uppercase tracking-wider rounded-xl transition-all flex items-center gap-2 cursor-pointer"
               >
-                <span>Explorar Ofertas S/ 99</span>
+                <span>Explorar Ofertas</span>
                 <ArrowRight size={14} />
               </button>
             </div>

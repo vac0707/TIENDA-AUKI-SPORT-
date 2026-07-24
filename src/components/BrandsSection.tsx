@@ -1,15 +1,21 @@
 import React from 'react';
-import { motion } from 'motion/react';
-import { brands } from '../data/products';
-import { ChevronRight } from 'lucide-react';
+import { brands as defaultBrands } from '../data/products';
 import { cn } from '../lib/utils';
+import { Brand } from '../types';
 
 interface BrandsSectionProps {
   selectedBrand: string;
   onSelectBrand: (brandName: string) => void;
+  brands?: Brand[];
 }
 
-export const BrandsSection: React.FC<BrandsSectionProps> = ({ selectedBrand, onSelectBrand }) => {
+export const BrandsSection: React.FC<BrandsSectionProps> = ({ 
+  selectedBrand, 
+  onSelectBrand,
+  brands = defaultBrands
+}) => {
+  const activeBrands = brands.filter(b => b.active !== false);
+
   return (
     <section className="py-12 bg-neutral-950 border-b border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -26,7 +32,7 @@ export const BrandsSection: React.FC<BrandsSectionProps> = ({ selectedBrand, onS
           {selectedBrand !== 'Todas' && (
             <button 
               onClick={() => onSelectBrand('Todas')}
-              className="text-xs font-bold text-red-400 hover:text-white underline tracking-wider"
+              className="text-xs font-bold text-red-400 hover:text-white underline tracking-wider cursor-pointer"
             >
               Ver todas las marcas
             </button>
@@ -38,7 +44,7 @@ export const BrandsSection: React.FC<BrandsSectionProps> = ({ selectedBrand, onS
           <button
             onClick={() => onSelectBrand('Todas')}
             className={cn(
-              "p-4 rounded-xl border transition-all text-center flex flex-col items-center justify-center gap-2 group",
+              "p-4 rounded-xl border transition-all text-center flex flex-col items-center justify-center gap-2 group cursor-pointer",
               selectedBrand === 'Todas'
                 ? "bg-red-600 border-red-500 text-white shadow-lg shadow-red-600/30 scale-[1.02]"
                 : "bg-black/60 border-white/10 hover:border-red-500/50 text-white/70 hover:text-white"
@@ -48,7 +54,7 @@ export const BrandsSection: React.FC<BrandsSectionProps> = ({ selectedBrand, onS
             <span className="text-[10px] opacity-70">Catálogo Completo</span>
           </button>
 
-          {brands.map(brand => (
+          {activeBrands.map(brand => (
             <button
               key={brand.id}
               onClick={() => {
@@ -57,7 +63,7 @@ export const BrandsSection: React.FC<BrandsSectionProps> = ({ selectedBrand, onS
                 if (catalogEl) catalogEl.scrollIntoView({ behavior: 'smooth' });
               }}
               className={cn(
-                "p-4 rounded-xl border transition-all text-center flex flex-col items-center justify-center gap-2 relative overflow-hidden group",
+                "p-4 rounded-xl border transition-all text-center flex flex-col items-center justify-center gap-2 relative overflow-hidden group cursor-pointer",
                 selectedBrand.toLowerCase() === brand.name.toLowerCase()
                   ? "bg-red-600 border-red-500 text-white shadow-lg shadow-red-600/30 scale-[1.02]"
                   : "bg-black/60 border-white/10 hover:border-red-500/50 text-white/70 hover:text-white"
@@ -67,9 +73,8 @@ export const BrandsSection: React.FC<BrandsSectionProps> = ({ selectedBrand, onS
                 <img 
                   src={brand.logo} 
                   alt={brand.name} 
-                  className="max-h-full max-w-full object-contain filter invert contrast-200 opacity-90"
+                  className="max-h-full max-w-full object-contain opacity-90"
                   onError={(e) => {
-                    // Fallback to text logo if svg fails
                     (e.target as HTMLElement).style.display = 'none';
                   }}
                 />

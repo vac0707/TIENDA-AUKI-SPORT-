@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { ProductCard } from './ProductCard';
-import { Product, CartItem } from '../types';
+import { Product, CartItem, Category } from '../types';
 import { Search, Filter, SlidersHorizontal, RefreshCw, Sparkles, Tag } from 'lucide-react';
 import { cn } from '../lib/utils';
 
@@ -15,6 +15,7 @@ interface CatalogSectionProps {
   onQuickView: (product: Product) => void;
   onAddToCart: (product: Product, size: string, color: string) => void;
   onDirectWhatsApp: (product: Product) => void;
+  categoriesList?: Category[];
 }
 
 export const CatalogSection: React.FC<CatalogSectionProps> = ({
@@ -27,14 +28,18 @@ export const CatalogSection: React.FC<CatalogSectionProps> = ({
   onSearchChange,
   onQuickView,
   onAddToCart,
-  onDirectWhatsApp
+  onDirectWhatsApp,
+  categoriesList = []
 }) => {
   const [selectedSizeFilter, setSelectedSizeFilter] = useState<string>('Todas');
   const [selectedTagFilter, setSelectedTagFilter] = useState<string>('Todos');
   const [sortBy, setSortBy] = useState<'recent' | 'price-asc' | 'price-desc' | 'popular'>('recent');
   const [priceMax, setPriceMax] = useState<number>(800);
 
-  const categories = ['Todos', 'Hombre', 'Mujer', 'Unisex', 'Trekking', 'Fiestas Patrias', 'Ofertas'];
+  // Dynamic categories from Admin, or default fallback
+  const activeCategories = categoriesList.filter(c => c.active !== false).map(c => c.name);
+  const categories = ['Todos', ...Array.from(new Set(activeCategories))];
+  
   const sizesList = ['Todas', '35', '36', '36.5', '37', '37.5', '38', '38.5', '39', '40', '40.5', '41', '41.5', '42', '42.5', '43', '44'];
   const tagsList = ['Todos', 'Nuevo', 'Oferta', 'Top Ventas', 'Fiestas Patrias'];
 

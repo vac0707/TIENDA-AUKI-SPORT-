@@ -11,10 +11,17 @@ import { Footer } from './components/Footer';
 
 import { AdminLayout } from './components/admin/AdminLayout';
 import { AdminLogin } from './components/admin/AdminLogin';
-import { productsService, authService } from './services/api';
+import { 
+  productsService, 
+  brandsService, 
+  categoriesService, 
+  promotionsService, 
+  configService, 
+  authService 
+} from './services/api';
 
 import { products as initialProducts } from './data/products';
-import { Product, CartItem, AdminUser } from './types';
+import { Product, Brand, Category, PromotionsConfig, SiteConfig, CartItem, AdminUser } from './types';
 import { MessageCircle, ArrowUp } from 'lucide-react';
 
 export default function App() {
@@ -26,6 +33,19 @@ export default function App() {
   const [adminUser, setAdminUser] = useState<AdminUser | null>(() => {
     return authService.getCurrentUser();
   });
+
+  // Dynamic store data states
+  const [products, setProducts] = useState<Product[]>(initialProducts);
+  const [brands, setBrands] = useState<Brand[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [promotionsConfig, setPromotionsConfig] = useState<PromotionsConfig | null>(null);
+  const [siteConfig, setSiteConfig] = useState<SiteConfig | null>(null);
+
+  const [selectedCategory, setSelectedCategory] = useState<string>('Todos');
+  const [selectedBrand, setSelectedBrand] = useState<string>('Todas');
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  
+  const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
 
   // Listen to browser path changes / pushState
   useEffect(() => {
@@ -42,13 +62,6 @@ export default function App() {
     setIsAdminRoute(path.startsWith('/admin'));
   };
 
-  const [products, setProducts] = useState<Product[]>(initialProducts);
-  const [selectedCategory, setSelectedCategory] = useState<string>('Todos');
-  const [selectedBrand, setSelectedBrand] = useState<string>('Todas');
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  
-  const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
-  
   // LocalStorage Cart state
   const [cartItems, setCartItems] = useState<CartItem[]>(() => {
     try {
@@ -72,20 +85,29 @@ export default function App() {
     }
   }, [cartItems]);
 
-  // Load products dynamically from REST API Service
-  const loadProducts = async () => {
+  // Load all dynamic store data from REST API Services
+  const loadAllStoreData = async () => {
     try {
-      const liveProducts = await productsService.getAll();
-      if (liveProducts && liveProducts.length > 0) {
-        setProducts(liveProducts);
-      }
+      const [liveProds, liveBrands, liveCats, livePromos, liveConfig] = await Promise.all([
+        productsService.getAll(),
+        brandsService.getAll(),
+        categoriesService.getAll(),
+        promotionsService.get(),
+        configService.get()
+      ]);
+
+      if (liveProds && liveProds.length > 0) setProducts(liveProds);
+      if (liveBrands) setBrands(liveBrands);
+      if (liveCats) setCategories(liveCats);
+      if (livePromos) setPromotionsConfig(livePromos);
+      if (liveConfig) setSiteConfig(liveConfig);
     } catch (err) {
-      console.error('Error fetching live products', err);
+      console.error('Error fetching live store data:', err);
     }
   };
 
   useEffect(() => {
-    loadProducts();
+    loadAllStoreData();
   }, [isAdminRoute]);
 
   useEffect(() => {
@@ -167,10 +189,12 @@ export default function App() {
     }));
   };
 
+  const whatsappPhone = siteConfig?.whatsappPhone || "51931741682";
+
   const handleDirectWhatsAppProduct = (product: Product) => {
     const msg = `Hola *AUKI SPORT*, me interesa consultar este modelo:\n\n👟 *Zapatilla:* ${product.brand} ${product.name}\n💰 *Precio:* S/ ${product.price.toFixed(2)}\n📏 *Tallas disponibles:* ${product.sizes.join(', ')}\n\n¿Tienen stock disponible para entrega inmediata?`;
     const encoded = encodeURIComponent(msg);
-    window.open(`https://wa.me/51931741682?text=${encoded}`, '_blank');
+    window.open(`https://wa.me/${whatsappPhone}?text=${encoded}`, '_blank');
   };
 
   const handleBuyNowFromModal = (item: CartItem) => {
@@ -199,6 +223,9 @@ export default function App() {
         activeCategory={selectedCategory}
         onSelectCategory={setSelectedCategory}
         searchQuery={searchQuery}
+        categories={categories}
+        siteConfig={siteConfig}
+        promotionsConfig={promotionsConfig}
       />
 
       <main className="flex-1">
@@ -214,12 +241,15 @@ export default function App() {
             const catalogEl = document.getElementById('catalog');
             if (catalogEl) catalogEl.scrollIntoView({ behavior: 'smooth' });
           }}
+          siteConfig={siteConfig}
+          promotionsConfig={promotionsConfig}
         />
 
         {/* Brands Slider Filter Bar */}
         <BrandsSection
           selectedBrand={selectedBrand}
           onSelectBrand={setSelectedBrand}
+          brands={brands}
         />
 
         {/* Promotions Banner */}
@@ -229,6 +259,7 @@ export default function App() {
             const catalogEl = document.getElementById('catalog');
             if (catalogEl) catalogEl.scrollIntoView({ behavior: 'smooth' });
           }}
+          promotionsConfig={promotionsConfig}
         />
 
         {/* Dynamic Products Catalog Grid */}
@@ -243,19 +274,20 @@ export default function App() {
           onQuickView={setQuickViewProduct}
           onAddToCart={handleCardAddToCart}
           onDirectWhatsApp={handleDirectWhatsAppProduct}
+          categoriesList={categories}
         />
 
       </main>
 
       {/* Footer Component */}
-      <Footer />
+      <Footer siteConfig={siteConfig} categories={categories} />
 
       {/* Floating Action Buttons: WhatsApp & Scroll Top */}
       <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3 items-end pointer-events-auto">
         {showScrollTop && (
           <button
             onClick={scrollToTop}
-            className="p-3 bg-neutral-900 border border-white/20 text-white rounded-full hover:bg-red-600 hover:border-red-500 transition-all shadow-xl"
+            className="p-3 bg-neutral-900 border border-white/20 text-white rounded-full hover:bg-red-600 hover:border-red-500 transition-all shadow-xl cursor-pointer"
             aria-label="Volver arriba"
           >
             <ArrowUp size={20} />
@@ -263,7 +295,7 @@ export default function App() {
         )}
 
         <a
-          href="https://wa.me/51931741682?text=Hola%20AUKI%20SPORT,%20deseo%20hacer%20un%20pedido%20de%20zapatillas"
+          href={`https://wa.me/${whatsappPhone}?text=Hola%20AUKI%20SPORT,%20deseo%20hacer%20un%20pedido%20de%20zapatillas`}
           target="_blank"
           rel="noreferrer"
           className="bg-emerald-600 hover:bg-emerald-500 text-white p-3.5 sm:px-5 sm:py-3.5 rounded-full shadow-[0_0_25px_rgba(16,185,129,0.5)] flex items-center gap-2 cursor-pointer hover:scale-105 transition-all group"
@@ -301,6 +333,7 @@ export default function App() {
         onClose={() => setIsCheckoutOpen(false)}
         items={cartItems}
         onClearCart={handleClearCart}
+        siteConfig={siteConfig}
       />
 
     </div>

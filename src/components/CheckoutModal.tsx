@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { CartItem, OrderDetails } from '../types';
+import { CartItem, OrderDetails, SiteConfig } from '../types';
 import { X, MessageCircle, MapPin, Truck, Store, ShieldCheck, CheckCircle2 } from 'lucide-react';
 import { cn } from '../lib/utils';
 
@@ -9,15 +9,20 @@ interface CheckoutModalProps {
   onClose: () => void;
   items: CartItem[];
   onClearCart: () => void;
+  siteConfig?: SiteConfig | null;
 }
 
 export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   isOpen,
   onClose,
   items,
-  onClearCart
+  onClearCart,
+  siteConfig
 }) => {
   if (!isOpen) return null;
+
+  const whatsappPhone = siteConfig?.whatsappPhone || "51931741682";
+  const storePickupAddress = siteConfig?.storePickupAddress || siteConfig?.address || "Av. Grau 456 Stand 102 - Huancayo / Lima";
 
   const total = items.reduce((acc, i) => acc + (i.price * i.quantity), 0);
 
